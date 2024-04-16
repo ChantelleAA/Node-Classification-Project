@@ -1,5 +1,7 @@
 # Node Classification on the Cora Dataset
 
+![Cora Dataset image retrieved from Orbifold Consulting](https://github.com/ChantelleAA/Node-Classification-Project/assets/115734837/9e23519d-edbc-420b-bf2e-425078a42bf4)
+
 ## Overview
 
 This project implements state-of-the-art graph neural network techniques for classifying scientific publications in the Cora dataset. The dataset consists of 2708 machine learning papers categorized into one of seven classes. Each paper is described by a binary word vector indicating the presence of certain words.
