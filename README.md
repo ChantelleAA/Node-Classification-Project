@@ -26,7 +26,7 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
 
 ### Prerequisites
 
-- **Python 3.8+**
+- **Python 3.7+**
 - **PyTorch 1.7+**
 - **PyTorch Geometric**
 - **Anaconda or Miniconda** (Recommended)
