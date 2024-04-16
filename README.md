@@ -35,8 +35,8 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/ChantelleAA/cora
-   cd cora
+   git clone https://github.com/ChantelleAA/Node-Classification-Project
+   cd Node-Classification-Project
    ```
 
 2. **Create and Activate a Conda Environment**
