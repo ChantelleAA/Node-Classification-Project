@@ -42,7 +42,7 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
 2. **Create and Activate a Conda Environment**
    ```bash
    conda env create -f environment.yml
-   conda activate sspedit
+   conda activate sspe
    ```
 
 3. **Navigate to the Experiments Directory**
