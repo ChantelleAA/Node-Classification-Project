@@ -116,9 +116,7 @@ Node-Classification-Project/
 ## Limitations
 
 - **Scalability**: Current implementation may not efficiently scale to larger graphs or datasets due to memory constraints.
-- **Version Dependency**: Specific dependencies on PyTorch and PyTorch-vision
-
-orch Geometric versions may limit compatibility.
+- **Version Dependency**: Specific dependencies on PyTorch, PyTorch Vision, and PyTorch Geometric versions may limit compatibility.
 - **Reproducibility**: Although seeds are fixed, slight variations in results may occur due to differences in underlying hardware or software environments.
 
 ## Reproducibility
@@ -127,4 +125,4 @@ To ensure reproducibility, the seed for all random number generators used in the
 
 ## Conclusion
 
-This implementation showcases the effective use of graph convolutional networks for semi-supervised learning on graph-structured data. The setup ensures that any practitioner can replicate the study or extend it to other datasets or GNN architectures.
+This implementation showcases the effective use of graph convolutional networks for semi-supervised learning on graph-structured data. The setup ensures that any practitioner can replicate the study or extend it to other datasets  or GNN architectures with minimal modifications.
