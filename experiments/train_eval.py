@@ -168,8 +168,16 @@ def save_predictions(model, data, f, node_id_to_index):
     with torch.no_grad():
         logits = model(data)
         preds = logits.argmax(dim=1)
-
-    reverse_label_mapping = {v: k for k, v in data.label_mapping.items()}
+    label_mapping = {
+    'Case_Based': 0,
+    'Genetic_Algorithms': 1,
+    'Neural_Networks': 2,
+    'Probabilistic_Methods': 3,
+    'Reinforcement_Learning': 4,
+    'Rule_Learning': 5,
+    'Theory': 6
+                    }    
+    reverse_label_mapping = {v: k for k, v in label_mapping.items()}
 
     for i, pred in enumerate(preds):
         if data.val_mask[i]:
