@@ -7,118 +7,96 @@ import json
 
 class CustomCoraLoader:
     """
-    A loader class for the Cora dataset that initializes the dataset path, 
-    loads the graph data from content and citation files, and processes them into a format suitable for GNNs.
-
-    Attributes:
-        data_dir (str): Directory path where the Cora dataset is located.
-        normalize_features (bool): Flag to normalize node features using Torch Geometric's NormalizeFeatures.
+    Loader for the Cora dataset that initializes paths, loads graph data, and processes it for GNN usage.
     """
     def __init__(self, data_dir, normalize_features=True):
         """
-        Initializes the CustomCoraLoader with the directory of the dataset and the option to normalize features.
-
-        Parameters:
-            data_dir (str): The directory where the dataset files are stored.
-            normalize_features (bool): If set to True, the node features will be normalized.
+        Constructor for initializing the loader with the dataset directory and normalization option.
         """
-        self.data_dir = data_dir
-        self.normalize_features = normalize_features
-        self.content_file = os.path.join(data_dir, 'cora.content')
-        self.cites_file = os.path.join(data_dir, 'cora.cites')
-        self.node_id_to_index = {} 
+        self.data_dir = data_dir  # Path to the dataset directory
+        self.normalize_features = normalize_features  # Flag to determine whether to normalize features
+        self.content_file = os.path.join(data_dir, 'cora.content')  # Path to the content file
+        self.cites_file = os.path.join(data_dir, 'cora.cites')  # Path to the cites file
+        self.node_id_to_index = {}  # Mapping from node ID to index
 
     def load_data(self):
         """
-        Loads the dataset, processes it, and returns it in a format suitable for use with graph neural networks.
-
-        Returns:
-            Data: A Torch Geometric Data object containing graph data.
+        Main method to load, process, and return the graph data as a Data object.
         """
-        node_features, node_labels = self.load_content_file()
-        edge_index = self.load_cites_file()
-        data = Data(x=node_features, edge_index=edge_index, y=node_labels)
+        node_features, node_labels = self.load_content_file()  # Load features and labels
+        edge_index = self.load_cites_file()  # Load edges
+        data = Data(x=node_features, edge_index=edge_index, y=node_labels)  # Create data object
+        
         if self.normalize_features:
-            NormalizeFeatures()(data)
-        data.num_classes = int(torch.max(data.y)) + 1
+            NormalizeFeatures()(data)  # Normalize features if flag is set
+        
+        data.num_classes = int(torch.max(data.y)) + 1  # Determine the number of classes
         return data
 
     def load_content_file(self):
         """
-        Loads node features and labels from the content file.
-
-        Returns:
-            Tuple[torch.Tensor, torch.Tensor]: A tuple containing the feature matrix and labels tensor.
+        Loads and processes the node features and labels from the content file.
         """
         label_mapping = {
-            'Case_Based': 0,
-            'Genetic_Algorithms': 1,
-            'Neural_Networks': 2,
-            'Probabilistic_Methods': 3,
-            'Reinforcement_Learning': 4,
-            'Rule_Learning': 5,
-            'Theory': 6
+            'Case_Based': 0, 'Genetic_Algorithms': 1, 'Neural_Networks': 2, 
+            'Probabilistic_Methods': 3, 'Reinforcement_Learning': 4, 
+            'Rule_Learning': 5, 'Theory': 6
         }
-        features = []
-        labels = []
+        features = []  # List to hold feature vectors
+        labels = []  # List to hold label indices
 
         with open(self.content_file, 'r') as file:
             for index, line in enumerate(file):
                 parts = line.strip().split('\t')
-                self.node_id_to_index[parts[0]] = index
-                features.append([int(x) for x in parts[1:-1]])
-                labels.append(label_mapping[parts[-1]])
+                self.node_id_to_index[parts[0]] = index  # Map node ID to its line index
+                features.append([int(x) for x in parts[1:-1]])  # Extract and store features
+                labels.append(label_mapping[parts[-1]])  # Map and store labels
 
-        feature_tensor = torch.tensor(features, dtype=torch.float)
-        label_tensor = torch.tensor(labels, dtype=torch.long)
+        feature_tensor = torch.tensor(features, dtype=torch.float)  # Convert list to tensor
+        label_tensor = torch.tensor(labels, dtype=torch.long)  # Convert list to tensor
         return feature_tensor, label_tensor
 
     def load_cites_file(self):
         """
-        Loads the citation links from the cites file and constructs the edge index tensor.
-
-        Returns:
-            torch.Tensor: The edge index tensor representing the graph connectivity.
+        Loads and processes the citation links from the cites file to construct the edge index tensor.
         """
-        edges = []
+        edges = []  # List to hold pairs of indices representing edges
+
         with open(self.cites_file, 'r') as file:
             for line in file:
                 source, target = line.strip().split('\t')
                 if source in self.node_id_to_index and target in self.node_id_to_index:
-                    source_idx = self.node_id_to_index[source]
-                    target_idx = self.node_id_to_index[target]
-                    edges.append([source_idx, target_idx])
+                    source_idx = self.node_id_to_index[source]  # Get index of source node
+                    target_idx = self.node_id_to_index[target]  # Get index of target node
+                    edges.append([source_idx, target_idx])  # Store edge
 
         if not edges:
             raise ValueError("No valid edges found. Check the node IDs in the .cites file.")
-        edge_index = torch.tensor(edges, dtype=torch.long).t().contiguous()
+        
+        edge_index = torch.tensor(edges, dtype=torch.long).t().contiguous()  # Create tensor and transpose
         return edge_index
 
 def save_node_id_to_index(node_id_to_index, filename='node_id_to_index.json'):
     """
-    Saves the mapping from node ID to index to a JSON file.
-
-    Parameters:
-        node_id_to_index (dict): A dictionary mapping node IDs to indices.
-        filename (str): The filename for storing the JSON data.
+    Saves the mapping of node IDs to indices to a JSON file.
     """
     with open(filename, 'w') as file:
-        json.dump(node_id_to_index, file)
+        json.dump(node_id_to_index, file)  # Write dictionary to file in JSON format
 
 def main():
     """
-    Main function to load data, process it, and print some basic statistics.
+    Main function to demonstrate loading, processing, and using the dataset.
     """
-    dataset_dir = '../data/'
+    dataset_dir = '../data/'  # Directory containing the dataset
     data_loader = CustomCoraLoader(data_dir=dataset_dir, normalize_features=True)
-    dataset = data_loader.load_data()
-    save_node_id_to_index(data_loader.node_id_to_index)
+    dataset = data_loader.load_data()  # Load and process the dataset
+    save_node_id_to_index(data_loader.node_id_to_index)  # Save the node ID to index mapping
     print(dataset)
     print(f"Number of Nodes: {dataset.x.shape[0]}")
     print(f"Number of Features per Node: {dataset.x.shape[1]}")
     print(f"Number of Edges: {dataset.edge_index.shape[1]}")
-    print(f"num_classes: {dataset.num_classes}")
-    print(f"{data_loader.node_id_to_index}")
+    print(f"Number of Classes: {dataset.num_classes}")
+    print(f"Node ID to Index Mapping: {data_loader.node_id_to_index}")
 
 if __name__ == "__main__":
     main()
