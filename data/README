@@ -1,37 +1,29 @@
-# Optimization of Graph Neural Networks with Natural Gradient Descent
+This directory contains the a selection of the Cora dataset (www.research.whizbang.com/data).
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/optimization-of-graph-neural-networks-with/node-classification-on-citeseer)](https://paperswithcode.com/sota/node-classification-on-citeseer?p=optimization-of-graph-neural-networks-with)
+The Cora dataset consists of Machine Learning papers. These papers are classified into one of the following seven classes:
+		Case_Based
+		Genetic_Algorithms
+		Neural_Networks
+		Probabilistic_Methods
+		Reinforcement_Learning
+		Rule_Learning
+		Theory
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/optimization-of-graph-neural-networks-with/node-classification-on-cora)](https://paperswithcode.com/sota/node-classification-on-cora?p=optimization-of-graph-neural-networks-with)
+The papers were selected in a way such that in the final corpus every paper cites or is cited by atleast one other paper. There are 2708 papers in the whole corpus. 
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/optimization-of-graph-neural-networks-with/node-classification-on-pubmed)](https://paperswithcode.com/sota/node-classification-on-pubmed?p=optimization-of-graph-neural-networks-with)
+After stemming and removing stopwords we were left with a vocabulary of size 1433 unique words. All words with document frequency less than 10 were removed.
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/optimization-of-graph-neural-networks-with/node-classification-on-citeseer-with-public)](https://paperswithcode.com/sota/node-classification-on-citeseer-with-public?p=optimization-of-graph-neural-networks-with)
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/optimization-of-graph-neural-networks-with/node-classification-on-pubmed-with-public)](https://paperswithcode.com/sota/node-classification-on-pubmed-with-public?p=optimization-of-graph-neural-networks-with)
+THE DIRECTORY CONTAINS TWO FILES:
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/optimization-of-graph-neural-networks-with/node-classification-on-cora-with-public-split)](https://paperswithcode.com/sota/node-classification-on-cora-with-public-split?p=optimization-of-graph-neural-networks-with)
+The .content file contains descriptions of the papers in the following format:
 
-This repository contains the implementaion of the [Optimization of Graph Neural Networks with Natural Gradient Descent](https://arxiv.org/abs/2008.09624). Most of the code is adapted from [github.com/rusty1s/pytorch_geometric](https://github.com/rusty1s/pytorch_geometric) and [github.com/Thrandis/EKFAC-pytorch](https://github.com/Thrandis/EKFAC-pytorch). To duplicate the results reported in the paper, follow the subsequent steps in order. 
+		<paper_id> <word_attributes>+ <class_label>
 
-- Clone the repository and change your current directory:
-```
-git clone https://github.com/russellizadi/ssp
-cd ssp
-```
-- Create a new `conda` environment using the default `environment.yml`:
-```
-conda env create
-```
-- Activate the default environment:
-```
-conda activate ssp
-```
-- Go to the `experiments` folder:
-```
-cd experiments
-```
-- Run all the experiments performed in the paper:
-```
-./run.sh
-```
+The first entry in each line contains the unique string ID of the paper followed by binary values indicating whether each word in the vocabulary is present (indicated by 1) or absent (indicated by 0) in the paper. Finally, the last entry in the line contains the class label of the paper.
+
+The .cites file contains the citation graph of the corpus. Each line describes a link in the following format:
+
+		<ID of cited paper> <ID of citing paper>
+
+Each line contains two paper IDs. The first entry is the ID of the paper being cited and the second ID stands for the paper which contains the citation. The direction of the link is from right to left. If a line is represented by "paper1 paper2" then the link is "paper2->paper1". 
