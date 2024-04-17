@@ -13,24 +13,24 @@ class CustomCoraLoader:
         """
         Constructor for initializing the loader with the dataset directory and normalization option.
         """
-        self.data_dir = data_dir  # Path to the dataset directory
-        self.normalize_features = normalize_features  # Flag to determine whether to normalize features
-        self.content_file = os.path.join(data_dir, 'cora.content')  # Path to the content file
-        self.cites_file = os.path.join(data_dir, 'cora.cites')  # Path to the cites file
-        self.node_id_to_index = {}  # Mapping from node ID to index
+        self.data_dir = data_dir
+        self.normalize_features = normalize_features
+        self.content_file = os.path.join(data_dir, 'cora.content')
+        self.cites_file = os.path.join(data_dir, 'cora.cites')
+        self.node_id_to_index = {}
 
     def load_data(self):
         """
         Main method to load, process, and return the graph data as a Data object.
         """
-        node_features, node_labels = self.load_content_file()  # Load features and labels
-        edge_index = self.load_cites_file()  # Load edges
-        data = Data(x=node_features, edge_index=edge_index, y=node_labels)  # Create data object
+        node_features, node_labels = self.load_content_file()
+        edge_index = self.load_cites_file()
+        data = Data(x=node_features, edge_index=edge_index, y=node_labels)
         
         if self.normalize_features:
-            NormalizeFeatures()(data)  # Normalize features if flag is set
+            NormalizeFeatures()(data)
         
-        data.num_classes = int(torch.max(data.y)) + 1  # Determine the number of classes
+        data.num_classes = int(torch.max(data.y)) + 1
         return data
 
     def load_content_file(self):
@@ -42,55 +42,64 @@ class CustomCoraLoader:
             'Probabilistic_Methods': 3, 'Reinforcement_Learning': 4, 
             'Rule_Learning': 5, 'Theory': 6
         }
-        features = []  # List to hold feature vectors
-        labels = []  # List to hold label indices
+        features = []
+        labels = []
 
         with open(self.content_file, 'r') as file:
             for index, line in enumerate(file):
                 parts = line.strip().split('\t')
-                self.node_id_to_index[parts[0]] = index  # Map node ID to its line index
-                features.append([int(x) for x in parts[1:-1]])  # Extract and store features
-                labels.append(label_mapping[parts[-1]])  # Map and store labels
+                if len(parts) != (1434 + 2):  # Verify correct format
+                    raise ValueError(f"Line {index} in {self.content_file} is malformed.")
+                node_id = parts[0]
+                self.node_id_to_index[node_id] = index
+                features.append([int(x) for x in parts[1:-1]])
+                labels.append(label_mapping.get(parts[-1], -1))
+                if labels[-1] == -1:
+                    raise ValueError(f"Invalid label on line {index} in {self.content_file}.")
 
-        feature_tensor = torch.tensor(features, dtype=torch.float)  # Convert list to tensor
-        label_tensor = torch.tensor(labels, dtype=torch.long)  # Convert list to tensor
+        feature_tensor = torch.tensor(features, dtype=torch.float)
+        label_tensor = torch.tensor(labels, dtype=torch.long)
         return feature_tensor, label_tensor
 
     def load_cites_file(self):
         """
-        Loads and processes the citation links from the cites file to construct the edge index tensor.
+        Loads and processes the citation links from the cites file.
         """
-        edges = []  # List to hold pairs of indices representing edges
+        edge_list = []
 
         with open(self.cites_file, 'r') as file:
             for line in file:
-                source, target = line.strip().split('\t')
-                if source in self.node_id_to_index and target in self.node_id_to_index:
-                    source_idx = self.node_id_to_index[source]  # Get index of source node
-                    target_idx = self.node_id_to_index[target]  # Get index of target node
-                    edges.append([source_idx, target_idx])  # Store edge
+                parts = line.strip().split('\t')
+                if len(parts) != 2:
+                    raise ValueError(f"Malformed citation line: {line.strip()}")
+                source, target = parts
+                if source not in self.node_id_to_index or target not in self.node_id_to_index:
+                    raise ValueError(f"Citation between non-existent nodes: {source}, {target}")
+                source_idx = self.node_id_to_index[source]
+                target_idx = self.node_id_to_index[target]
+                edge_list.append([source_idx, target_idx])
 
-        if not edges:
-            raise ValueError("No valid edges found. Check the node IDs in the .cites file.")
-        
-        edge_index = torch.tensor(edges, dtype=torch.long).t().contiguous()  # Create tensor and transpose
+        if not edge_list:
+            raise ValueError("No valid edges found in the .cites file.")
+
+        edge_index = torch.tensor(edge_list, dtype=torch.long).t().contiguous()
         return edge_index
 
 def save_node_id_to_index(node_id_to_index, filename='node_id_to_index.json'):
     """
-    Saves the mapping of node IDs to indices to a JSON file.
+    Saves the mapping from node IDs to indices in a JSON file.
     """
     with open(filename, 'w') as file:
-        json.dump(node_id_to_index, file)  # Write dictionary to file in JSON format
+        json.dump(node_id_to_index, file)
 
 def main():
     """
-    Main function to demonstrate loading, processing, and using the dataset.
+    Demonstrates loading, processing, and saving the Cora dataset.
     """
-    dataset_dir = '../data/'  # Directory containing the dataset
+    dataset_dir = '../data/'
     data_loader = CustomCoraLoader(data_dir=dataset_dir, normalize_features=True)
-    dataset = data_loader.load_data()  # Load and process the dataset
-    save_node_id_to_index(data_loader.node_id_to_index)  # Save the node ID to index mapping
+    dataset = data_loader.load_data()
+    save_node_id_to_index(data_loader.node_id_to_index)
     print(dataset)
     print(f"Number of Nodes: {dataset.x.shape[0]}")
     print(f"Number of Features per Node: {dataset.x.shape[1]}")
