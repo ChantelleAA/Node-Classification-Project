@@ -61,7 +61,8 @@ Ensure that `run.sh` is executable (`chmod +x run.sh`).
 
 - **Data Loader**: Loads and preprocesses the Cora dataset.
 - **Model Definition**: Defines the GCN model architecture.
-- **Training and Evaluation Script**: Manages the training process including parameter updates and assesses model performance on validation sets (using 10-fold cross validation).
+- **Optimization**: Defines optimization methods used.
+- **Training and Evaluation Script**: Manages the training process including parameter updates and assesses model performance on validation sets (using 10-fold cross-validation).
 - **Utility Scripts**: Provide additional functionalities like logging and data manipulation.
 
 ### Outputs
