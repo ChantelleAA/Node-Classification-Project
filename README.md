@@ -81,32 +81,42 @@ The outcomes of this project include:
 
 ### File Structure
 
+The initial file structure contains all directories as shown below except the runs and predictions directories which are added and updated after the code has been run.
+
 ```
 Node-Classification-Project/
 │
-├── data/                     # Dataset directory
-│   ├── cora.content          # Node feature and label file
-│   └── cora.cites            # Edge list file
+├── data/                       # Dataset directory
+│   ├── cora.content            # Node feature and label file
+│   ├── cora.cites              # Edge list file
+│   └── README.md               # Data description
 │
-├── experiments/              # Scripts for model training and evaluation
-│   ├── run.sh                # Shell script for executing experiments
-│   └── train_eval.py         # Main script for training and evaluation
+├── runs/                       # TensorBoard logs directory
+│   └── experiment-1/           # Specific experiment logs
+│       └── events.out.tfevents.*
 │
-├── models/                   # Model definitions
-│   └── gcn.py                # GCN model implementation
+├── predictions/                # Predictions directory
+│   └── experiment-1/           # Predictions for specific experiment
+│       └── all_predictions.tsv
 │
-├── utils/                    # Utility functions
-│   └── utils.py              # Helper functions for data manipulation and logging
-│
-├── environment.yml           # Conda environment file
-├── README.md                 # Project documentation
-└── LICENSE                   # License file
+├── experiments/
+|   ├── datasets.py             # Data loading and preprocessing functions
+|   ├── gcn.py                  # GCN architecture definition
+|   ├── psgd.py                 # Optimization functions
+|   ├── train_eval.py           # Training and evaluation script
+|   ├── utils.py                # Utility functions
+|   ├── node_id_to_index.json   # Index list for paper ids
+│   └── run.sh                  # executable file for project
+|
+├── environment.yml             # Environment definition script
+└── README.md                   # This file
+
 ```
 
 ## Limitations
 
 - **Scalability**: Current implementation may not efficiently scale to larger graphs or datasets due to memory constraints.
-- **Version Dependency**: Specific dependencies on PyTorch and PyT
+- **Version Dependency**: Specific dependencies on PyTorch and PyTorch-vision
 
 orch Geometric versions may limit compatibility.
 - **Reproducibility**: Although seeds are fixed, slight variations in results may occur due to differences in underlying hardware or software environments.
