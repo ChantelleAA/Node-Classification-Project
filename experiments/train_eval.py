@@ -9,7 +9,7 @@ import utils as ut
 import psgd
 from sklearn.model_selection import KFold
 import json
-
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 path_runs = "runs"
 path_predictions = "predictions"  # Separate directory for predictions
