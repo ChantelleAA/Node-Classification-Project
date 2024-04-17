@@ -6,7 +6,7 @@
 
 This project implements state-of-the-art graph neural network techniques for classifying scientific publications in the Cora dataset. The dataset consists of 2708 machine learning papers categorized into one of seven classes. Each paper is described by a binary word vector indicating the presence of certain words.
 
-The core of this implementation is a Graph Convolutional Network (GCN), optimized through the methodologies discussed in ["Optimization of Graph Neural Networks with Natural Gradient Descent" by Izadi et al. (2020)](https://arxiv.org/pdf/2008.09624v1.pdf).  The original implementation that was adapted to meet the requirements of this project are available at [Russell Izadi's Repository](https://github.com/russellizadi/ssp).
+The core of this implementation is a Graph Convolutional Network (GCN), optimized through the methodologies discussed in ["Optimization of Graph Neural Networks with Natural Gradient Descent" by Izadi et al. (2020)](https://arxiv.org/pdf/2008.09624v1.pdf). The original implementation that was adapted to meet the requirements of this project is available at [Russell Izadi's Repository](https://github.com/russellizadi/ssp).
 
 ## Methodology
 
@@ -71,6 +71,50 @@ Ensure that `run.sh` is executable (`chmod +x run.sh`).
 - **Logs**: Training progress and performance metrics.
 - **Predictions**: Classification results on the test set.
 
+## Results and File Structure
+
+### Results
+
+The outcomes of this project include:
+- **Accuracy and Loss Metrics**: Documented through TensorBoard logs and output console.
+- **Predictions**: Predictions of classes for each paper recorded in .tsv file.
+
+### File Structure
+
+```
+Node-Classification-Project/
+│
+├── data/                     # Dataset directory
+│   ├── cora.content          # Node feature and label file
+│   └── cora.cites            # Edge list file
+│
+├── experiments/              # Scripts for model training and evaluation
+│   ├── run.sh                # Shell script for executing experiments
+│   └── train_eval.py         # Main script for training and evaluation
+│
+├── models/                   # Model definitions
+│   └── gcn.py                # GCN model implementation
+│
+├── utils/                    # Utility functions
+│   └── utils.py              # Helper functions for data manipulation and logging
+│
+├── environment.yml           # Conda environment file
+├── README.md                 # Project documentation
+└── LICENSE                   # License file
+```
+
+## Limitations
+
+- **Scalability**: Current implementation may not efficiently scale to larger graphs or datasets due to memory constraints.
+- **Version Dependency**: Specific dependencies on PyTorch and PyT
+
+orch Geometric versions may limit compatibility.
+- **Reproducibility**: Although seeds are fixed, slight variations in results may occur due to differences in underlying hardware or software environments.
+
+## Reproducibility
+
+To ensure reproducibility, the seed for all random number generators used in the project is fixed at 42.
+
 ## Conclusion
 
-This implementation showcases the effective use of graph convolutional networks for semi-supervised learning on graph-structured data.
+This implementation showcases the effective use of graph convolutional networks for semi-supervised learning on graph-structured data. The setup ensures that any practitioner can replicate the study or extend it to other datasets or GNN architectures.
