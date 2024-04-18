@@ -117,7 +117,7 @@ Node-Classification-Project/
 │       └── <model_name>/              # Predictions for a specific model
 │           └── all_predictions.tsv    # Tab-separated predictions file
 │
-├── requirements.txt                   # Depeendencies for code
+├── requirements.txt                   # Dependencies for code
 └── README.md                          # Project documentation
 ```
 
