@@ -6,8 +6,9 @@ from torch_geometric.nn import GCNConv
 from datasets import CustomCoraLoader
 from train_eval import run
 
-# Parse command line arguments for running the model
+# Set up the argument parser
 parser = argparse.ArgumentParser(description="Run GCN on the Cora dataset.")
+# Arguments for dataset path, number of runs, epochs, learning rate, etc.
 parser.add_argument('--dataset', type=str, required=True, help="Directory containing the dataset")
 parser.add_argument('--runs', type=int, default=10, help="Number of runs")
 parser.add_argument('--epochs', type=int, default=200, help="Number of epochs per run")
@@ -29,77 +30,77 @@ parser.add_argument('--hyperparam', type=str, default=None, help="Hyperparameter
 args = parser.parse_args()
 
 class Net_orig(torch.nn.Module):
-    """Original Network architecture with two GCN layers."""
     def __init__(self, dataset):
         super(Net_orig, self).__init__()
-        self.conv1 = GCNConv(dataset.num_features, args.hidden)  # First GCN layer
-        self.conv2 = GCNConv(args.hidden, dataset.num_classes)   # Second GCN layer
+        # Initialize the first and second GCN layers with the specified number of features and classes
+        self.conv1 = GCNConv(dataset.num_features, args.hidden)
+        self.conv2 = GCNConv(args.hidden, dataset.num_classes)
 
     def reset_parameters(self):
-        """Resets parameters for the convolutional layers."""
+        # Reset the weights for both GCN layers to reinitialize them before training
         self.conv1.reset_parameters()
         self.conv2.reset_parameters()
 
     def forward(self, data):
-        """Defines the forward pass of the model."""
-        x, edge_index = data.x, data.edge_index  # Unpack data
-        x = F.relu(self.conv1(x, edge_index))    # Apply first conv layer with ReLU activation
-        x = F.dropout(x, p=args.dropout, training=self.training)  # Apply dropout
-        x = self.conv2(x, edge_index)            # Apply second conv layer
-        return F.log_softmax(x, dim=1)           # Apply log_softmax for classification
+        # Define the forward propagation logic including activation function and dropout
+        x, edge_index = data.x, data.edge_index
+        x = F.relu(self.conv1(x, edge_index))
+        x = F.dropout(x, p=args.dropout, training=self.training)
+        x = self.conv2(x, edge_index)
+        return F.log_softmax(x, dim=1)
 
 class CRD(torch.nn.Module):
-    """Convolutional-ReLU-Dropout block."""
     def __init__(self, d_in, d_out, p):
         super(CRD, self).__init__()
-        self.conv = GCNConv(d_in, d_out, cached=True)  # GCN convolutional layer
-        self.p = p  # Dropout probability
+        # GCN layer with caching to speed up repeated operations
+        self.conv = GCNConv(d_in, d_out, cached=True)
+        self.p = p
 
     def reset_parameters(self):
-        """Resets parameters for the convolutional layer."""
+        # Reinitialize the convolutional layer's weights
         self.conv.reset_parameters()
 
     def forward(self, x, edge_index, mask=None):
-        """Defines the forward pass of the CRD block."""
-        x = F.relu(self.conv(x, edge_index))  # Apply ReLU activation function
-        x = F.dropout(x, p=self.p, training=self.training)  # Apply dropout
+        # Forward pass through ReLU and dropout
+        x = F.relu(self.conv(x, edge_index))
+        x = F.dropout(x, p=self.p, training=self.training)
         return x
 
 class CLS(torch.nn.Module):
-    """Classification block with a single GCN layer."""
     def __init__(self, d_in, d_out):
         super(CLS, self).__init__()
-        self.conv = GCNConv(d_in, d_out, cached=True)  # GCN convolutional layer
+        # Single GCN layer for classification
+        self.conv = GCNConv(d_in, d_out, cached=True)
 
     def reset_parameters(self):
-        """Resets parameters for the convolutional layer."""
+        # Reset the convolutional layer parameters
         self.conv.reset_parameters()
 
     def forward(self, x, edge_index, mask=None):
-        """Forward pass for the classification block."""
-        x = self.conv(x, edge_index)  # Apply convolution
-        return F.log_softmax(x, dim=1)  # Apply log_softmax for classification
+        # Compute the log softmax for the output
+        x = self.conv(x, edge_index)
+        return F.log_softmax(x, dim=1)
 
 class Net(torch.nn.Module):
-    """Complete network with CRD and CLS blocks."""
     def __init__(self, dataset):
         super(Net, self).__init__()
-        self.crd = CRD(dataset.num_features, args.hidden, args.dropout)  # CRD block
-        self.cls = CLS(args.hidden, dataset.num_classes)  # CLS block
+        # Aggregate CRD and CLS blocks into a complete model
+        self.crd = CRD(dataset.num_features, args.hidden, args.dropout)
+        self.cls = CLS(args.hidden, dataset.num_classes)
 
     def reset_parameters(self):
-        """Resets parameters for both CRD and CLS blocks."""
+        # Reset all parameters in CRD and CLS blocks
         self.crd.reset_parameters()
         self.cls.reset_parameters()
 
     def forward(self, data):
-        """Defines the forward pass for the entire network."""
+        # Define the complete model's forward pass
         x, edge_index = data.x, data.edge_index
-        x = self.crd(x, edge_index, data.train_mask)  # Process through CRD block
-        x = self.cls(x, edge_index, data.train_mask)  # Process through CLS block
+        x = self.crd(x, edge_index, data.train_mask)
+        x = self.cls(x, edge_index, data.train_mask)
         return x
 
-# Load dataset and create models based on the configuration
+# Load the dataset and prepare the experiment setup
 dataset = CustomCoraLoader(data_dir=args.dataset, normalize_features=args.normalize_features)
 kwargs = {
     'dataset': dataset.load_data(), 
@@ -120,7 +121,7 @@ kwargs = {
     'hyperparam': args.hyperparam
 }
 
-# Experiment with varying hyperparameters or run normally
+# Handle different hyperparameters configurations or a standard run
 if args.hyperparam:
     for param in (np.logspace(-3, 0, 10) if args.hyperparam == 'eps' else
                   [4, 8, 16, 32, 64, 128] if args.hyperparam == 'update_freq' else
