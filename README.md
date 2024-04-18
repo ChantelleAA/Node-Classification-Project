@@ -4,7 +4,7 @@
 
 ## Overview
 
-This project implements state-of-the-art graph neural network techniques for classifying scientific publications in the Cora dataset. The dataset consists of 2708 machine learning papers categorized into one of seven classes. Each paper is described by a binary word vector indicating the presence of certain words.
+This project implements state-of-the-art graph neural network techniques for classifying scientific publications in the Cora dataset. The dataset consists of 2708 machine learning papers categorized into one of seven classes. Each paper is described by a binary word vector indicating the presence of certain words. More information about the dataset can be found [here](https://github.com/ChantelleAA/Node-Classification-Project/blob/main/data/README).
 
 The core of this implementation is a Graph Convolutional Network (GCN), optimized through the methodologies discussed in ["Optimization of Graph Neural Networks with Natural Gradient Descent" by Izadi et al. (2020)](https://arxiv.org/pdf/2008.09624v1.pdf). The original implementation that was adapted to meet the requirements of this project is available at [Russell Izadi's Repository](https://github.com/russellizadi/ssp).
 
@@ -22,9 +22,9 @@ The model is trained in a semi-supervised manner, utilizing labeled and unlabele
 
 The model is optimized using the Adam optimizer with specific hyperparameters, and further enhanced by techniques such as dropout and L2 regularization to combat overfitting. The training process is also supported by K-Fold cross-validation to ensure the model's robustness and generalizability.
 
-## Getting Started
+### Getting Started
 
-### Installation
+#### Installation
 
 1. **Clone the Repository**
    ```bash
@@ -32,23 +32,41 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
    cd Node-Classification-Project
    ```
 
-2. **Create and Activate a Conda Environment**
+2. **Create and Activate a Virtual Environment**
+   
+   To isolate the project dependencies, use a virtual environment. You can use Python's built-in `venv` module:
    ```bash
-   conda env create -f environment.yml
-   conda activate sspe
+   python3 -m venv sspe_env
+   source sspe_env/bin/activate  # On Windows use `sspe_env\Scripts\activate`
    ```
 
-3. **Navigate to the Experiments Directory**
+4. **Install Requirements**
+   
+   Install all dependencies using `pip` from the `requirements.txt` file:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+6. **Navigate to the Experiments Directory**
    ```bash
    cd experiments
    ```
 
-4. **Run Experiments**
+7. **Run Experiments**
+   
+   Execute the experiment scripts:
    ```bash
    ./run.sh
    ```
 
 Ensure that `run.sh` is executable (`chmod +x run.sh`).
+
+6. **Deactivate the Virtual Environment**
+   
+   Once you are done working in the virtual environment, you can deactivate it:
+   ```bash
+   deactivate
+   ```
 
 ### Structure
 
