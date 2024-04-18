@@ -11,3 +11,4 @@ matplotlib
 pandas
 torch-scatter
 torch-geometric
+torch-sparse
