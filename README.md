@@ -95,30 +95,30 @@ The initial file structure contains all directories as shown below except the ru
 ```
 Node-Classification-Project/
 │
-├── data/                       # Dataset directory
-│   ├── cora.content            # Node feature and label file
-│   ├── cora.cites              # Edge list file
-│   └── README.md               # Description of the data
+├── data/                              # Dataset directory
+│   ├── cora.content                   # Node feature and label file
+│   ├── cora.cites                     # Edge list file
+│   └── README.md                      # Description of the data
 │
 ├── experiments/
-│   ├── datasets.py             # Data loading and preprocessing functions
-│   ├── gcn.py                  # GCN architecture definition
-│   ├── psgd.py                 # Optimization functions
-│   ├── train_eval.py           # Training and evaluation script
-│   ├── utils.py                # Utility functions
-│   ├── node_id_to_index.json   # Mapping of node IDs to indices
-│   ├── run.sh                  # Shell script to run experiments
+│   ├── datasets.py                    # Data loading and preprocessing functions
+│   ├── gcn.py                         # GCN architecture definition
+│   ├── psgd.py                        # Optimization functions
+│   ├── train_eval.py                  # Training and evaluation script
+│   ├── utils.py                       # Utility functions
+│   ├── node_id_to_index.json          # Mapping of node IDs to indices
+│   ├── run.sh                         # Shell script to run experiments
 │   │
-│   ├── runs/                   # TensorBoard logs directory
-│   │   └── <model_name>/       # Logs for a specific model
+│   ├── runs/                          # TensorBoard logs directory
+│   │   └── <model_name>/              # Logs for a specific model
 │   │       └── events.out.tfevents.*  # TensorBoard log files
 │   │
-│   └── predictions/            # Predictions directory
-│       └── <model_name>/       # Predictions for a specific model
+│   └── predictions/                   # Predictions directory
+│       └── <model_name>/              # Predictions for a specific model
 │           └── all_predictions.tsv    # Tab-separated predictions file
 │
-├── environment.yml             # Conda environment specification file
-└── README.md                   # Project documentation
+├── requirements.txt                   # Depeendencies for code
+└── README.md                          # Project documentation
 ```
 
 ## Limitations
