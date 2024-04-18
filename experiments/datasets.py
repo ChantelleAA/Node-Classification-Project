@@ -48,7 +48,7 @@ class CustomCoraLoader:
         with open(self.content_file, 'r') as file:
             for index, line in enumerate(file):
                 parts = line.strip().split('\t')
-                if len(parts) != (1434 + 2):  # Verify correct format
+                if len(parts) != (1433 + 2):  # Verify correct format
                     raise ValueError(f"Line {index} in {self.content_file} is malformed.")
                 node_id = parts[0]
                 self.node_id_to_index[node_id] = index
