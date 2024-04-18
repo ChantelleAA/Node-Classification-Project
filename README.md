@@ -41,8 +41,13 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
    ```
 
 4. **Install Requirements**
+
+   Install the PyTorch library first.
+   ```bash
+   pip install torch
+   ```
    
-   Install all dependencies using `pip` from the `requirements.txt` file:
+   Install all other dependencies using `pip` from the `requirements.txt` file:
    ```bash
    pip install -r requirements.txt
    ```
