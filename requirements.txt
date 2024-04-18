@@ -1,0 +1,12 @@
+python==3.7
+pytorch
+torchvision
+cudatoolkit==10.2
+jupyter
+jupyterlab
+seaborn
+tensorboard
+matplotlib
+pandas
+torch-scatter
+torch-geometric
