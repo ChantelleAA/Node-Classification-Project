@@ -59,8 +59,6 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
    ./run.sh
    ```
 
-Ensure that `run.sh` is executable (`chmod +x run.sh`).
-
 6. **Deactivate the Virtual Environment**
    
    Once you are done working in the virtual environment, you can deactivate it:
