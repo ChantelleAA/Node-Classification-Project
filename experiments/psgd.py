@@ -25,33 +25,24 @@ class KFAC(Optimizer):
         """
         super(KFAC, self).__init__(net.parameters(), {})
         self.eps = eps  # Regularization parameter
-        self.sua = sua  # Structured Unit Approximation flag
-        self.pi = pi    # Pi correction flag
-        self.update_freq = update_freq  # Update frequency for the preconditioner
-        self.alpha = alpha  # Decay factor for covariance matrices
-        self.constraint_norm = constraint_norm  # Fisher norm scaling flag
-        self.params = []  # List to hold parameters
-        self._fwd_handles = []  # List to hold forward hooks
-        self._bwd_handles = []  # List to hold backward hooks
-        self._iteration_counter = 0  # Counter for preconditioner updates
+        self.sua = sua  # Apply SUA if True
+        self.pi = pi    # Apply pi correction if True
+        self.update_freq = update_freq  # How often to update the preconditioner
+        self.alpha = alpha  # Decay factor for averaging covariances
+        self.constraint_norm = constraint_norm  # Scale gradients by Fisher norm if True
+        self.params = []  # List to store module parameters
+        self._fwd_handles = []  # Forward hook handles
+        self._bwd_handles = []  # Backward hook handles
+        self._iteration_counter = 0  # Counts the number of iterations
         
-        # Register hooks to save inputs and gradients
+        # Register forward and backward hooks
         for mod in net.modules():
-            mod_name = mod.__class__.__name__
-            if mod_name in ['CRD', 'CLS']:  # Check if module is a target for KFAC
-                handle = mod.register_forward_pre_hook(self._save_input)
-                self._fwd_handles.append(handle)
-                
-                for sub_mod in mod.modules():
-                    if hasattr(sub_mod, 'weight'):
-                        handle = sub_mod.register_backward_hook(self._save_grad_output)
-                        self._bwd_handles.append(handle)
-                        
-                        params = [sub_mod.weight]  # Parameters to precondition
-                        if sub_mod.bias is not None:
-                            params.append(sub_mod.bias)
-
-                        self.param_groups.append({'params': params, 'mod': mod, 'sub_mod': sub_mod})
+            if mod.__class__.__name__ in ['Linear', 'Conv2d']:  # Assuming KFAC is for Linear and Conv2d layers
+                self.params.extend(list(mod.parameters()))  # Add parameters of the module
+                fwd_handle = mod.register_forward_pre_hook(self._save_input)
+                self._fwd_handles.append(fwd_handle)
+                bwd_handle = mod.register_backward_hook(self._save_grad_output)
+                self._bwd_handles.append(bwd_handle)
 
     def step(self, update_stats=True, update_params=True, lam=0.):
         """
@@ -62,27 +53,27 @@ class KFAC(Optimizer):
             update_params (bool): Whether to update parameters.
             lam (float): Lambda for additional regularization.
         """
-        self.lam = lam  # Set regularization lambda
+        self.lam = lam  # Additional regularization factor
         fisher_norm = 0.  # Initialize Fisher norm
 
         for group in self.param_groups:
-            weight, bias = (group['params'] + [None])[:2]  # Unpack weight and bias
-            state = self.state[weight]  # Get state for this group
+            weight, bias = (group['params'] + [None])[:2]  # Safely unpack weight and bias
+            state = self.state[weight]  # Get state associated with the weight
 
             if update_stats:
                 if self._iteration_counter % self.update_freq == 0 or self.alpha != 1:
-                    self._compute_covs(group, state)  # Compute covariances
+                    self._compute_covs(group, state)  # Compute covariance matrices
                     state['ixxt'], state['iggt'] = self._inv_covs(state['xxt'], state['ggt'], state['num_locations'])
 
             if update_params:
                 gw, gb = self._precond(weight, bias, group, state)  # Precondition gradients
-                fisher_norm += self._update_gradients(weight, bias, gw, gb)  # Update gradients
+                fisher_norm += self._update_gradients(weight, bias, gw, gb)  # Update gradients and compute Fisher norm
 
         if update_params and self.constraint_norm and fisher_norm > 0:
-            self._scale_gradients(fisher_norm)  # Scale gradients by Fisher norm
+            self._scale_gradients(fisher_norm)  # Scale all gradients by Fisher norm
 
         if update_stats:
-            self._iteration_counter += 1  # Increment update counter
+            self._iteration_counter += 1  # Increment the iteration counter
 
     def _update_gradients(self, weight, bias, gw, gb):
         """
@@ -94,21 +85,24 @@ class KFAC(Optimizer):
             gw (Tensor): Preconditioned gradient for weight.
             gb (Tensor): Preconditioned gradient for bias (optional).
         """
-        fisher_norm = (weight.grad * gw).sum()  # Compute dot product for Fisher norm
+        fisher_norm = (weight.grad * gw).sum()  # Compute Fisher norm contribution from weight
         weight.grad.data = gw  # Update weight gradient
-        if bias is not None:
-            fisher_norm += (bias.grad * gb).sum()  # Update bias gradient if exists
+        if bias is not None and bias.grad is not None:
+            fisher_norm += (bias.grad * gb).sum()  # Update Fisher norm contribution from bias
             bias.grad.data = gb
         return fisher_norm
 
     def _scale_gradients(self, fisher_norm):
         """
         Scale gradients by the Fisher norm.
+
+        Only scales gradients if the computed Fisher norm is significantly greater than zero to avoid division by zero.
         """
-        scale = (1. / fisher_norm) ** 0.5  # Compute scaling factor
-        for group in self.param_groups:
-            for param in group['params']:
-                param.grad.data *= scale  # Scale gradients
+        if fisher_norm > 1e-10:  # Avoid division by zero
+            scale = (1. / fisher_norm) ** 0.5  # Scaling factor
+            for group in self.param_groups:
+                for param in group['params']:
+                    param.grad.data *= scale  # Scale gradient data
 
     def __del__(self):
         """
