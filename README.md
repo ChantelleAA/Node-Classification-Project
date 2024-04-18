@@ -63,7 +63,11 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
    ```bash
    ./run.sh
    ```
-
+   Make sure `run.sh` is executable:
+   ```bash
+   chmod +x run.sh
+   ```
+   
 ### Structure
 
 - **Data Loader**: Loads and preprocesses the Cora dataset.
