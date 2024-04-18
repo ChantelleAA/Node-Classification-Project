@@ -12,7 +12,7 @@ The core of this implementation is a Graph Convolutional Network (GCN), optimize
 
 ### Graph Convolutional Networks (GCN)
 
-Our model uses GCN layers that capture both node features (word occurrences) and graph topology (citation links) to learn how to classify documents. The GCN's ability to leverage neighborhood information makes it exceptionally well-suited for node classification tasks in citation networks.
+This model uses GCN layers that capture both node features (word occurrences) and graph topology (citation links) to learn how to classify documents. The GCN's ability to leverage neighborhood information makes it exceptionally well-suited for node classification tasks in citation networks.
 
 ### Semi-Supervised Learning
 
