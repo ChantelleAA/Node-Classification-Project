@@ -17,4 +17,5 @@ dependencies:
   - pip:
     - torch-scatter
     - torch-geometric
+    - torch-sparse
 
