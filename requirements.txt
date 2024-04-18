@@ -1,8 +1,7 @@
-python==3.7
 pip
-pytorch
+torch
+numpy
 torchvision
-cudatoolkit==10.2
 jupyter
 jupyterlab
 seaborn
