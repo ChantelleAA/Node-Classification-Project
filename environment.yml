@@ -13,6 +13,7 @@ dependencies:
   - tensorboard
   - matplotlib
   - pandas
+  - pip
   - pip:
     - torch-scatter
     - torch-geometric
