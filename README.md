@@ -58,15 +58,15 @@ The core of this implementation is a Graph Convolutional Network (GCN), optimize
 
 - **Graph Convolutional Networks (GCN)**
 
-This model uses GCN layers that capture both node features (word occurrences) and graph topology (citation links) to learn how to classify documents. The GCN's ability to leverage neighborhood information makes it exceptionally well-suited for node classification tasks in citation networks.
+   This model uses GCN layers that capture both node features (word occurrences) and graph topology (citation links) to learn how  to classify documents. The GCN's ability to leverage neighborhood information makes it exceptionally       well-suited for node classification tasks in citation networks.
 
 - **Semi-Supervised Learning**
 
-The model is trained in a semi-supervised manner, utilizing labeled and unlabeled nodes together, which allows it to effectively generalize from limited label information spread across the network.
+   The model is trained in a semi-supervised manner, utilizing labeled and unlabeled nodes together, which allows it to effectively generalize from limited label information spread across the network.
 
 - **Optimization**
 
-The model is optimized using the Adam optimizer with specific hyperparameters, and further enhanced by techniques such as dropout and L2 regularization to combat overfitting. The training process is also supported by K-Fold cross-validation to ensure the model's robustness and generalizability.
+   The model is optimized using the Adam optimizer with specific hyperparameters, and further enhanced by techniques such as dropout and L2 regularization to combat overfitting. The training process is also supported by K-Fold cross-      validation to ensure the model's robustness and generalizability.
 
 ## Algorithm
 
@@ -92,7 +92,7 @@ The algorithm implemented for node classification on the Cora dataset via the Gr
 
 ### Step 5: Cross-Validation
 - **K-Fold Cross-Validation:** Systematically split the dataset into K folds. For each fold, train the model on K-1 folds and validate it on the remaining fold. This process is repeated K times with each fold used exactly once as the validation set.
-- **Performance Metrics:** Calculate accuracy, loss, and other relevant metrics for each fold. Aggregate these metrics to assess the overall performance and stability of the model.
+- **Performance Metrics:** Calculate accuracy and loss for each fold. Aggregate these metrics to assess the overall performance and stability of the model.
 
 ### Step 6: Evaluation and Output
 - **Test Evaluation:** After model training and validation, assess the model on a separate test set (if available) to evaluate its performance on unseen data.
