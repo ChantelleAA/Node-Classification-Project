@@ -118,9 +118,9 @@ The algorithm implemented for node classification on the Cora dataset via the Gr
 ### Results
 
 The outcomes of this project include:
-- **Accuracy and Loss Metrics**: Documented through TensorBoard logs and output console. The logs are       stored in subdirectories corresponding to the different models and hyperparameters used which are        found within the `runs` directory in the experiments folder.
+- **Accuracy and Loss Metrics**: Documented through TensorBoard logs and output console. The logs are       stored in subdirectories corresponding to the different models and hyperparameters used which are        found within the `runs` directory in the `experiments` folder.
 
-- **Predictions**: Predictions of classes for each paper recorded in .tsv file. The predictions are also    stored in subdirectories corresponding to the different models and hyperparameters used which are        found within the `predictions` directory in the experiments folder.
+- **Predictions**: Predictions of classes for each paper recorded in .tsv file. The predictions are also    stored in subdirectories corresponding to the different models and hyperparameters used which are        found within the `predictions` directory in the `experiments` folder.
 
 ### File Structure
 
