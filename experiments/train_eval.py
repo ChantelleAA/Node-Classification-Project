@@ -8,7 +8,16 @@ import utils as ut
 import psgd
 from sklearn.model_selection import KFold
 import json
+import numpy as np
+import random
 
+# Set seed for reproducibility in numpy, random, and PyTorch
+np.random.seed(42)
+random.seed(42)
+torch.manual_seed(42)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed_all(42)
+    
 # Disable oneDNN optimizations to maintain compatibility across different systems/versions
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
