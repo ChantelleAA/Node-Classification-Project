@@ -8,20 +8,6 @@ This project implements state-of-the-art graph neural network techniques for cla
 
 The core of this implementation is a Graph Convolutional Network (GCN), optimized through the methodologies discussed in ["Optimization of Graph Neural Networks with Natural Gradient Descent" by Izadi et al. (2020)](https://arxiv.org/pdf/2008.09624v1.pdf). The original implementation that was adapted to meet the requirements of this project is available at [Russell Izadi's Repository](https://github.com/russellizadi/ssp).
 
-## Methodology
-
-### Graph Convolutional Networks (GCN)
-
-This model uses GCN layers that capture both node features (word occurrences) and graph topology (citation links) to learn how to classify documents. The GCN's ability to leverage neighborhood information makes it exceptionally well-suited for node classification tasks in citation networks.
-
-### Semi-Supervised Learning
-
-The model is trained in a semi-supervised manner, utilizing labeled and unlabeled nodes together, which allows it to effectively generalize from limited label information spread across the network.
-
-### Optimization
-
-The model is optimized using the Adam optimizer with specific hyperparameters, and further enhanced by techniques such as dropout and L2 regularization to combat overfitting. The training process is also supported by K-Fold cross-validation to ensure the model's robustness and generalizability.
-
 ### Getting Started
 
 #### Installation
@@ -67,6 +53,54 @@ The model is optimized using the Adam optimizer with specific hyperparameters, a
    ```bash
    chmod +x run.sh
    ```
+
+## Methodology
+
+- **Graph Convolutional Networks (GCN)**
+
+This model uses GCN layers that capture both node features (word occurrences) and graph topology (citation links) to learn how to classify documents. The GCN's ability to leverage neighborhood information makes it exceptionally well-suited for node classification tasks in citation networks.
+
+- **Semi-Supervised Learning**
+
+The model is trained in a semi-supervised manner, utilizing labeled and unlabeled nodes together, which allows it to effectively generalize from limited label information spread across the network.
+
+- **Optimization**
+
+The model is optimized using the Adam optimizer with specific hyperparameters, and further enhanced by techniques such as dropout and L2 regularization to combat overfitting. The training process is also supported by K-Fold cross-validation to ensure the model's robustness and generalizability.
+
+## Algorithm
+
+The algorithm implemented for node classification on the Cora dataset via the Graph Convolutional Network (GCN) by going through data processing, model training, and evaluation steps. 
+
+### Step 1: Data Loading and Preprocessing
+- **Load Data:** Import the Cora dataset, which includes node features (binary word vectors for each paper) and graph topology (citation links between papers).
+- **Preprocess Data:** Convert the raw data into a format suitable for the GCN. This involves creating adjacency matrices to represent graph connections and normalizing these matrices to facilitate efficient gradient flow during model training.
+
+### Step 2: Model Setup
+- **Define GCN Architecture:** Configure the multi-layer GCN with specific parameters (e.g., number of layers, hidden units, and activation functions). The model architecture is designed to leverage node features and the graph structure effectively.
+- **Initialize Parameters:** Set initial weights and biases, often using strategies like Glorot initialization to ensure that the optimizer has a balanced starting point for parameter updates.
+
+### Step 3: Optimization Configuration
+- **Set Optimizer:** Use the Adam optimizer for adjusting model parameters. Adam is chosen for its efficiency in handling sparse gradients and its adaptive learning rate capabilities, which are ideal for the sparse and irregular structure of graph data.
+- **Regularization Techniques:** Apply dropout to randomly ignore a subset of features during training, which helps prevent overfitting. Additionally, incorporate L2 regularization to penalize large weights, further enhancing the model's generalization ability.
+
+### Step 4: Training Loop
+- **Mini-Batch Processing:** If applicable, divide the data into mini-batches. For GCN, often the entire graph is processed in a single batch due to the interconnected nature of the data.
+- **Forward Pass:** Compute node representations by propagating node features through the GCN layers. The layer-wise aggregation of features from neighboring nodes allows the model to learn complex patterns across the graph.
+- **Loss Calculation:** Evaluate the prediction error using a suitable loss function, such as cross-entropy for classification tasks.
+- **Backward Pass:** Perform backpropagation to compute the gradient of the loss function with respect to each parameter. Update model parameters using the gradients and the Adam optimization algorithm.
+
+### Step 5: Cross-Validation
+- **K-Fold Cross-Validation:** Systematically split the dataset into K folds. For each fold, train the model on K-1 folds and validate it on the remaining fold. This process is repeated K times with each fold used exactly once as the validation set.
+- **Performance Metrics:** Calculate accuracy, loss, and other relevant metrics for each fold. Aggregate these metrics to assess the overall performance and stability of the model.
+
+### Step 6: Evaluation and Output
+- **Test Evaluation:** After model training and validation, assess the model on a separate test set (if available) to evaluate its performance on unseen data.
+- **Save Outputs:** Store the model's predictions, performance metrics, and parameter configurations. This includes saving TensorBoard logs for visual analysis of the training process.
+
+### Step 7: Logging and Reproducibility
+- **Logging:** Maintain detailed logs of training/validation loss and accuracy, along with system settings and hyperparameters. This is crucial for debugging and refining the model.
+- **Fix Random Seeds:** Set seeds for all random number generators used in the project to ensure that results are consistent and reproducible across different runs.
    
 ### Structure
 
