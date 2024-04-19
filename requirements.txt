@@ -1,6 +1,7 @@
-torchvision==0.16.0+cu113
-torchaudio==2.1.0+cu113
+torchvision==0.16.0
+torchaudio==2.1.0
 torch-scatter==2.0.9
+torch-sparse
 torch-geometric==2.0.4
 numpy
 jupyter
