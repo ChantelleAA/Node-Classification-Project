@@ -26,7 +26,7 @@ The core of this implementation is a Graph Convolutional Network (GCN), optimize
    source sspe_env/bin/activate  # On Windows use `sspe_env\Scripts\activate`
    ```
 
-4. **Install Requirements**
+3. **Install Requirements**
 
    Install the PyTorch library first.
    ```bash
@@ -38,12 +38,12 @@ The core of this implementation is a Graph Convolutional Network (GCN), optimize
    pip install -r requirements.txt
    ```
 
-6. **Navigate to the Experiments Directory**
+4. **Navigate to the Experiments Directory**
    ```bash
    cd experiments
    ```
 
-7. **Run Experiments**
+5. **Run Experiments**
    
    Execute the experiment scripts:
    ```bash
@@ -95,7 +95,7 @@ The algorithm implemented for node classification on the Cora dataset via the Gr
 - **Performance Metrics:** Calculate accuracy and loss for each fold. Aggregate these metrics to assess the overall performance and stability of the model.
 - **Save Outputs:** Compile the outputs from each fold's evaluation and store the model's predictions, performance metrics, and parameter configurations. This includes saving TensorBoard logs for visual analysis of the training process.
 
-### Step 7: Logging and Reproducibility
+### Step 6: Logging and Reproducibility
 - **Logging:** Maintain detailed logs of training/validation loss and accuracy, along with system settings and hyperparameters. This is crucial for debugging and refining the model.
 - **Fix Random Seeds:** Set seeds for all random number generators used in the project to ensure that results are consistent and reproducible across different runs.
    
