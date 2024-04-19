@@ -78,7 +78,7 @@ The algorithm implemented for node classification on the Cora dataset via the Gr
 
 ### Step 2: Model Setup
 - **Define GCN Architecture:** Configure the multi-layer GCN with specific parameters (e.g., number of layers, hidden units, and activation functions). The model architecture is designed to leverage node features and the graph structure effectively.
-- **Initialize Parameters:** Set initial weights and biases, often using strategies like Glorot initialization to ensure that the optimizer has a balanced starting point for parameter updates.
+- **Initialize Parameters:** Set initial weights and biases to ensure that the optimizer has a balanced starting point for parameter updates.
 
 ### Step 3: Optimization Configuration
 - **Set Optimizer:** Use the Adam optimizer for adjusting model parameters. Adam is chosen for its efficiency in handling sparse gradients and its adaptive learning rate capabilities, which are ideal for the sparse and irregular structure of graph data.
@@ -90,13 +90,10 @@ The algorithm implemented for node classification on the Cora dataset via the Gr
 - **Loss Calculation:** Evaluate the prediction error using a suitable loss function, such as cross-entropy for classification tasks.
 - **Backward Pass:** Perform backpropagation to compute the gradient of the loss function with respect to each parameter. Update model parameters using the gradients and the Adam optimization algorithm.
 
-### Step 5: Cross-Validation
-- **K-Fold Cross-Validation:** Systematically split the dataset into K folds. For each fold, train the model on K-1 folds and validate it on the remaining fold. This process is repeated K times with each fold used exactly once as the validation set.
+### Step 5: Evaluation with Cross-Validation and Output 
+- **K-Fold Cross-Validation:** Systematically split the dataset into K folds. For each fold, train the model on K-1 folds and validate it on the remaining fold. This process is repeated K times with each fold used exactly once as the validation set. The cross-validation accuracy over the folds are averaged to give the final accuracy.
 - **Performance Metrics:** Calculate accuracy and loss for each fold. Aggregate these metrics to assess the overall performance and stability of the model.
-
-### Step 6: Evaluation and Output
-- **Test Evaluation:** After model training and validation, assess the model on a separate test set (if available) to evaluate its performance on unseen data.
-- **Save Outputs:** Store the model's predictions, performance metrics, and parameter configurations. This includes saving TensorBoard logs for visual analysis of the training process.
+- **Save Outputs:** Compile the outputs from each fold's evaluation and store the model's predictions, performance metrics, and parameter configurations. This includes saving TensorBoard logs for visual analysis of the training process.
 
 ### Step 7: Logging and Reproducibility
 - **Logging:** Maintain detailed logs of training/validation loss and accuracy, along with system settings and hyperparameters. This is crucial for debugging and refining the model.
@@ -114,15 +111,16 @@ The algorithm implemented for node classification on the Cora dataset via the Gr
 
 - **Model Checkpoints**: Stored periodically during training.
 - **Logs**: Training progress and performance metrics.
-- **Predictions**: Classification results on the test set.
+- **Predictions**: Classification results on the validation set.
 
 ## Results and File Structure
 
 ### Results
 
 The outcomes of this project include:
-- **Accuracy and Loss Metrics**: Documented through TensorBoard logs and output console.
-- **Predictions**: Predictions of classes for each paper recorded in .tsv file.
+- **Accuracy and Loss Metrics**: Documented through TensorBoard logs and output console. The logs are       stored in subdirectories corresponding to the different models and hyperparameters used which are        found within the `runs` directory in the experiments folder.
+
+- **Predictions**: Predictions of classes for each paper recorded in .tsv file. The predictions are also    stored in subdirectories corresponding to the different models and hyperparameters used which are        found within the `predictions` directory in the experiments folder.
 
 ### File Structure
 
